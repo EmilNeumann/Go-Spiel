@@ -1,28 +1,16 @@
-'''
-Created on 15.06.2015
+from Tkinter import *
 
-@author: Emil
-'''
-class pet():
-    number_of_legs = 0
-    def sleep(self):
-        print "zzz"
-    def count_legs(self):
-        print "I have %s legs." % self.number_of_legs
-        
-class dog(pet):
-    number_of_legs = 4
-    def bark(self):
-        print "Woof"
-        
-class dalmatiner(dog):
-    number_of_legs = 4
+class mainGUI():
     
-doug = dog()
-doug.sleep()
-doug.bark()
-doug.count_legs()
+    spielbrett = Canvas(bg="white")
+    
+    def __init__(self, master):
+        frame = Frame(master, width=500, height=500)
+        frame.pack()
+        self.spielbrett.place(x=50, y=50)
+        self.spielbrett.size = "400x400"
 
-nemo = pet()
-nemo.sleep()
-nemo.count_legs()
+root = Tk()
+app = mainGUI(root)
+root.mainloop(0)
+#root.destroy()
