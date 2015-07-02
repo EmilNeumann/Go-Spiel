@@ -1,4 +1,5 @@
 from Tkinter import *
+#from classes import *
 
 class mainGUI():
     """
@@ -7,14 +8,29 @@ class mainGUI():
     """
     def __init__(self, master):                     #Klassenkonstruktor, methode zum generieren des Fensters
         
-        frame = Frame(master, width=500, height=500)#Festlegung der Groesse
-        frame.pack()                                #Platzierung des Fensters auf dem Bildschirm
-        
+        self.frame = Frame(master, width=500, height=500)#Festlegung der Groesse
+        self.frame.pack()                                #Platzierung des Fensters auf dem Bildschirm
         self.parent = master
         self.parent.title("Go")                     #Festlegung des Namen des Fensters
+        self.initializeComponents()
         
-        self.spielbrett = Canvas(frame, bg="white") #Definition des Spielbretts
-        self.draw()                                 #Anzeigen des Spielbretts
+    def initializeComponents(self):
+        
+        self.spielbrett = Canvas(self.frame, bg="white") #Definition des Spielbretts
+        self.spielbrett.bind("<Button-1>", self.callback)
+#        self.spielfeld = []
+#        x = 0
+#        y = 0
+#        while x < 19:
+#            while y < 19:
+#                self.spielfeld[x, y] = Kreuzung(self.spielbrett)
+#                y = y + 1
+#            x = x + 1
+        self.draw()                                     #Anzeigen des Spielbretts
+    
+    def callback(self, event):
+        x = (event.x - 10) / 20
+        y = (event.y - 10) / 20
 
     def draw(self):
         i = 0
