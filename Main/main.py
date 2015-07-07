@@ -21,11 +21,11 @@ class mainGUI():
         self.draw()                                     #Anzeigen des Spielbretts
     
     def callback(self, event):
-        x = (event.x - 10) / 20
-        y = (event.y - 10) / 20
-        if self.spielfeldstatus[x][y] == 0:
-            self.spielfeldstatus[x][y] = 1
-            print str(x) + "/" + str(y) + " is black"
+        px = (event.x - 10) / 20
+        py = (event.y - 10) / 20
+        if self.spielfeldstatus[px][py] == 0:
+            self.spielfeldstatus[px][py] = 1            #setzt leider alle felder mit dem y-wert auf 1, unabhängig vom x-wert
+            print self.spielfeldstatus
         self.draw()
 
     def draw(self):
