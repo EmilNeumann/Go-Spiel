@@ -16,7 +16,7 @@ class mainGUI():
         
     def initializeComponents(self):
         """
-        Methode, die für die Initialisierung der Komponenten zuständig ist
+        Methode, die fuer die Initialisierung der Komponenten zustaendig ist
         """
         self.fertigButton = Button(self.frame, text="Fertig")
         self.fertigButton.place(x=200, y=500, height=50, width=100)
@@ -38,19 +38,19 @@ class mainGUI():
         y = (event.y - 10) / 20
         if (0 <= x < 19) and (0 <= y < 19):
             if self.spielfeldstatus[x][y] == 0:
-                self.spielfeldstatus[x][y] = 2      #setzt einen weißen Stein
+                self.spielfeldstatus[x][y] = 2      #setzt einen weissen Stein
         self.draw()
     
     def setBack(self, event):
         """
-        mit dieser Methode kann man Steine zurücknehmen,
+        mit dieser Methode kann man Steine zuruecknehmen,
         wenn man sie versehentlich gesetzt hat
         """
         x = (event.x - 10) / 20
         y = (event.y - 10) / 20
         if (0 <= x < 19) and (0 <= y < 19):
             if 1 == 1:
-                self.spielfeldstatus[x][y] = 0      #löscht einen gesetzten Stein
+                self.spielfeldstatus[x][y] = 0      #loescht einen gesetzten Stein
         self.draw()
         
     def draw(self):
@@ -73,7 +73,7 @@ class mainGUI():
             y = 0
             while y < 19:
                 if self.spielfeldstatus[x][y] == 2:
-                    self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29)     #zeichnet eine leere Elipse bei weißen Steinen
+                    self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29)     #zeichnet eine leere Elipse bei weissen Steinen
                 if self.spielfeldstatus[x][y] == 1:
                     pass                                                                #macht nichts, wenn ein schwarzer Stein vorhanden ist
                 y += 1
@@ -92,11 +92,13 @@ class mainGUI():
     
 def main():
     """
-    Methode, die das Programm laufen lässt
+    Methode, die das Programm laufen laesst
     """
     root = Tk()
     app = mainGUI(root)
     root.mainloop()
     
 if __name__ == '__main__':
+    
     main()
+    
