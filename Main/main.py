@@ -12,6 +12,10 @@ class mainGUI():
         self.frame.pack()                                #Platzierung des Fensters auf dem Bildschirm
         self.parent = master
         self.parent.title("Go")                     #Festlegung des Namen des Fensters
+        self.steingesetzt = False
+        self.stonecolor = 1
+        self.x = 0
+        self.y = 0
         self.initializeComponents()
         
     def initializeComponents(self):
@@ -37,8 +41,12 @@ class mainGUI():
         x = (event.x - 10) / 20
         y = (event.y - 10) / 20
         if (0 <= x < 19) and (0 <= y < 19):
-            if self.spielfeldstatus[x][y] == 0:
-                self.spielfeldstatus[x][y] = 2      #setzt einen weissen Stein
+            if (self.spielfeldstatus[x][y] == 0)and(not self.steingesetzt):
+                self.spielfeldstatus[x][y] = self.stonecolor
+                self.steingesetzt = True
+                self.x = x
+                self.y = y
+                self.stonecolor = (self.stonecolor%2)+1
         self.draw()
     
     def setBack(self, event):
@@ -49,7 +57,7 @@ class mainGUI():
         x = (event.x - 10) / 20
         y = (event.y - 10) / 20
         if (0 <= x < 19) and (0 <= y < 19):
-            if 1 == 1:
+            if self.spielfeldstatus[x][y] != 0:
                 self.spielfeldstatus[x][y] = 0      #loescht einen gesetzten Stein
         self.draw()
         
@@ -75,7 +83,10 @@ class mainGUI():
                 if self.spielfeldstatus[x][y] == 2:
                     self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29)     #zeichnet eine leere Elipse bei weissen Steinen
                 if self.spielfeldstatus[x][y] == 1:
-                    pass                                                                #macht nichts, wenn ein schwarzer Stein vorhanden ist
+                    i = 0.0
+                    while i <= 20:
+                        self.spielbrett.create_oval(((x*20)+11)+i, ((y*20)+11)+i, ((x*20)+29)-i, ((x*20)+29)-i)
+                        i += 0.5
                 y += 1
             x += 1
         
@@ -88,7 +99,12 @@ class mainGUI():
         -wo der Stein gesetzt wurde (Koordinaten) und ggf.
         -welche Farbe der Stein hat
         """
-        pass                                        #macht erst mal nichts
+        if not((self.x < 0)or(self.y < 0)):
+            self.f = open("spielverlauf.txt", "w")                  #neue datei anlegen
+            self.f.write(str(self.x)+", "+str(self.y))                   #neu angelegte datei beschreiben
+            self.x = -1
+            self.y = -1
+        self.steingesetzt = False
     
 def main():
     """
