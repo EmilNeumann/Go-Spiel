@@ -3,10 +3,11 @@ Created on 24.07.2015
 
 @author: Emil
 '''
-from Tkinter import Widget
+from Tkinter import Label
 
-class Stein(Widget):
-    def __init__(self):
+class Stein(Label):
+    def __init__(self, x, y, color):
         
-        self.visible = False
-        self.color = 0
+        self.color = color
+        self.x = x
+        self.y = y

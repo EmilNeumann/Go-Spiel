@@ -15,6 +15,8 @@ class Application(tk.Frame):
         self.quitButton = tk.Button(self, text='Quit',
             command=self.quit)
         self.quitButton.grid()
+        self.sc = tk.Scale(self)
+        self.sc.grid()
 
 app = Application()
 app.master.title('Sample application')
