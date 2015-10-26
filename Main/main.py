@@ -31,6 +31,11 @@ class mainGUI():
         self.fertigButton.place(x=200, y=500, height=50, width=100)
         self.fertigButton.bind("<Button-1>", self.fertigButton_click)
         
+        self.textbox_x = Text(self.frame, background="white", width=10, height=1)
+        self.textbox_x.place(x=50, y=500)
+        self.textbox_y = Text(self.frame, background="white", width=10, height=1)
+        self.textbox_y.place(x=50, y=530)
+        
         self.spielfeldstatus = [[None]*19 for i in range(19)]
         if not(i==18):
             print i
@@ -82,9 +87,11 @@ class mainGUI():
             while y < 19:
                 if self.spielfeldstatus[x][y] != None:
                     if self.spielfeldstatus[x][y].color == 2:
-                        self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29)     #zeichnet eine leere Elipse bei weissen Steinen
+                        self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, fill="#ffffff")     #zeichnet eine leere Elipse bei weissen Steinen
+                        pass
                     if self.spielfeldstatus[x][y].color == 1:
-                        self.spielbrett.create_rectangle(x*20+11, y*20+11, x*20+29, y*20+29)
+                        self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, fill="#000000")
+                        pass
                 y += 1
             x += 1
         
@@ -97,13 +104,20 @@ class mainGUI():
         -wo der Stein gesetzt wurde (Koordinaten) und ggf.
         -welche Farbe der Stein hat
         """
-        if not((self.x < 0)or(self.y < 0)):
+        if self.steingesetzt:
             self.zugliste += [str(self.x)+", "+str(self.y)+"\n"]
-            self.f = open("spielverlauf.txt", "w")
-            self.f.writelines(self.zugliste)
-            self.f.close()
-            self.x = -1
-            self.y = -1
+        else:
+            farbe = ""
+            if self.stonecolor == 1:
+                farbe = "schwarz"
+            else:
+                farbe = "weiss"
+            self.zugliste += [farbe+" setzt aus\n"]
+        self.f = open("spielverlauf.txt", "w")
+        self.f.writelines(self.zugliste)
+        self.f.close()
+        self.x = -1
+        self.y = -1
         self.steingesetzt = False
 
     def left_click(self, event):
@@ -160,7 +174,7 @@ def main():
     """
     root = Tk()             #Instanzierung eines leeren Tkinter-Fensters
     app = mainGUI(root)     #Instanzierung eines Programms, das die Vorlage root mit allen Aenderungen in mainGUI modifiziert
-    app.parent.mainloop()   #das Starten des Programms geht vom parent des Programms aus
+    app.parent.mainloop()   #das Starten des Programms geht vom parent des Programms (root) aus
 
 if __name__ == '__main__':
     main()
