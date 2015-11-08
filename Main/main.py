@@ -6,9 +6,9 @@ class mainGUI():
     Definition des Fensters,
     in dem das Spiel ablaufen soll
     """
-    def __init__(self, master):                     #Klassenkonstruktor, Methode zum generieren des Fensters
+    def __init__(self, master):
         """
-        Klassenkonstruktor
+        Klassenkonstruktor, wird aufgerufen, wenn ein Objekt dieser Klasse instanziert wird
         """
         self.frame = Frame(master, width=500, height=600)#Festlegung der Groesse
         self.frame.pack()                                #Platzierung des Fensters auf dem Bildschirm
@@ -25,11 +25,10 @@ class mainGUI():
 
     def initializeComponents(self):
         """
-        Hier werden der Fertig-Knopf und das Gitter aus Spielfeldern erzeugt
+        Hier werden alle Komponenten des Fensters erzeugt
         """
-        self.fertigButton = Button(self.frame, text="Fertig")
-        self.fertigButton.place(x=200, y=500, height=50, width=100)
-        self.fertigButton.bind("<Button-1>", self.fertigButton_click)
+        self.fertigButton = Button(self.frame, text="Fertig (aussetzen)", command=self.fertigButton_click)
+        self.fertigButton.place(x=350, y=500, height=50, width=100)
         
         self.textbox_x = Text(self.frame, background="white", width=10, height=1)
         self.textbox_x.place(x=50, y=500)
@@ -46,11 +45,13 @@ class mainGUI():
         Methode zum setzen der Steine
         """
         if (0 <= x < 19) and (0 <= y < 19):
-            if (self.spielfeldstatus[x][y] == None)and(not self.steingesetzt):
+            if (self.spielfeldstatus[x][y] == None):#and(not self.steingesetzt)
                 self.spielfeldstatus[x][y] = Stein(x, y, self.stonecolor)
                 self.steingesetzt = True
                 self.x = x
                 self.y = y
+                self.fertigButton = Button(self.frame, text="Fertig", command=self.fertigButton_click)
+                self.fertigButton.place(x=350, y=500, height=50, width=100)
                 self.draw()
 
     def setBack(self, x, y):
@@ -62,7 +63,9 @@ class mainGUI():
             if (self.spielfeldstatus[x][y] != None)and(x == self.x)and(y==self.y):      #man kann nur den zuletzt gesetzten Stein zuruecknehmen
                 self.spielfeldstatus[x][y] = None                                       #loescht einen gesetzten Stein
                 self.steingesetzt = False
-        self.draw()
+                self.fertigButton = Button(self.frame, text="Fertig (aussetzen)", command=self.fertigButton_click)
+                self.fertigButton.place(x=350, y=500, height=50, width=100)
+                self.draw()
 
     def draw(self):
         """
@@ -72,7 +75,8 @@ class mainGUI():
         self.spielbrett.bind("<Button-1>", self.left_click)
         self.spielbrett.bind("<Button-3>", self.right_click)
         self.spielbrett.bind("<Double-Button-1>", self.double_click)
-        self.spielbrett.bind("Enter", self.zug_speichern)
+        #self.spielbrett.bind("<Enter>", self.press_enter)
+        self.spielbrett.bind("<Motion>", self.mouse_move)
         i = 0
         while i < 19:                               #Schleife zum Zeichnen der senkrechten Linien
             i += 1
@@ -81,17 +85,24 @@ class mainGUI():
         while i < 19:                               #Schleife zum Zeichnen der waagerechten Linien
             i += 1
             self.spielbrett.create_line(20, i*20, 380, i*20)
+        self.spielbrett.create_rectangle( 79,  79,  81,  81)
+        self.spielbrett.create_rectangle( 79, 199,  81, 201)
+        self.spielbrett.create_rectangle( 79, 319,  81, 321)
+        self.spielbrett.create_rectangle(199,  79, 201,  81)
+        self.spielbrett.create_rectangle(199, 199, 201, 201)
+        self.spielbrett.create_rectangle(199, 319, 201, 321)
+        self.spielbrett.create_rectangle(319,  79, 321,  81)
+        self.spielbrett.create_rectangle(319, 199, 321, 201)
+        self.spielbrett.create_rectangle(319, 319, 321, 321)
         x = 0
         while x < 19:
             y = 0
             while y < 19:
                 if self.spielfeldstatus[x][y] != None:
                     if self.spielfeldstatus[x][y].color == 2:
-                        self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, fill="#ffffff")     #zeichnet eine leere Elipse bei weissen Steinen
-                        pass
+                        self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, fill="#ffffff")
                     if self.spielfeldstatus[x][y].color == 1:
                         self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, fill="#000000")
-                        pass
                 y += 1
             x += 1
         
@@ -99,7 +110,7 @@ class mainGUI():
 
     def zug_speichern(self):
         """
-        Methode zum senden der Daten:
+        Methode zum speichern der Daten:
         -ob ein Stein gesetzt wurde; wenn ja,
         -wo der Stein gesetzt wurde (Koordinaten) und ggf.
         -welche Farbe der Stein hat
@@ -131,7 +142,7 @@ class mainGUI():
 
     def del_stone(self, x, y):
         """
-        Methode zum manuellen schlagen von Steinen
+        Methode zum schlagen von Steinen
         """
         if (0 <= x < 19) and (0 <= y < 19):
             if (self.spielfeldstatus[x][y] != None)and(self.stonecolor != self.spielfeldstatus[x][y].color):        #man kann weder leere Felder noch eigene Steine schlagen
@@ -160,13 +171,46 @@ class mainGUI():
         y = (event.y - 10) / 20
         self.setBack(x, y)
 
-    def fertigButton_click(self, event):
+    def fertigButton_click(self):
+        """
+        Methode, die aufgerufen wird, wenn auf den Fertig-Button geklickt wird.
+        """
         self.zug_speichern()
         self.stonecolor = (self.stonecolor%2)+1
         if(self.stonecolor == 1):
             self.parent.title("Go - schwarz")
         elif(self.stonecolor == 2):
             self.parent.title("Go - weiss")
+        self.fertigButton = Button(self.frame, text="Fertig (aussetzen)", command=self.fertigButton_click)
+        self.fertigButton.place(x=350, y=500, height=50, width=100)
+        self.textbox_x = Text(self.frame, background="white", width=10, height=1)
+        self.textbox_x.place(x=50, y=500)
+        self.textbox_y = Text(self.frame, background="white", width=10, height=1)
+        self.textbox_y.place(x=50, y=530)
+
+    def mouse_move(self, event):
+        """
+        Methode, die aufgerufen werden soll, wenn mit
+        der Maus ueber das Spielbrett gefahren wird
+        """
+        self.draw()
+        x = (event.x-10)/20
+        y = (event.y-10)/20
+        if not self.steingesetzt:
+            if self.stonecolor == 1:
+                self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, outline="#7f7f7f", fill="#7f7f7f")
+            if self.stonecolor == 2:
+                self.spielbrett.create_oval(x*20+11, y*20+11, x*20+29, y*20+29, outline="#7f7f7f", fill="#bfbfbf")
+
+    def press_enter(self, event):
+        """
+        Methode, die aufgerufen werden sollte,
+        wenn die Eingabetaste gedrueckt wird
+        """
+        x = int(self.textbox_x.get(1.0, "end-1c"))
+        y = int(self.textbox_y.get(1.0, "end-1c"))
+        self.setStone(x, y)
+        #self.zug_speichern()
 
 def main():
     """
