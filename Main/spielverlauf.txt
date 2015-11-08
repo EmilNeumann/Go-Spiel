@@ -1,11 +1,2 @@
-4, 16
+9, 13
 weiss setzt aus
-schwarz setzt aus
-weiss setzt aus
-schwarz setzt aus
-weiss setzt aus
-schwarz setzt aus
-weiss setzt aus
-schwarz setzt aus
-weiss setzt aus
-schwarz setzt aus
