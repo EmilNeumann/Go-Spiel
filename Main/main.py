@@ -1,3 +1,4 @@
+#coding: utf-8
 from Tkinter import *
 from classes import Stein
 
@@ -10,11 +11,11 @@ class mainGUI():
         """
         Klassenkonstruktor, wird aufgerufen, wenn ein Objekt dieser Klasse instanziert wird
         """
-        self.frame = Frame(master, width=500, height=600)#Festlegung der Groesse
+        self.frame = Frame(master, width=500, height=600)#Festlegung der Größe
         self.frame.pack()                                #Platzierung des Fensters auf dem Bildschirm
         self.parent = master
         self.parent.title("Go")                     #Festlegung des Namen des Fensters
-        self.steingesetzt = False                   #Variable, die erforderlich ist, um nicht mehrere Steine in einem Zug setzen zu koennen
+        self.steingesetzt = False                   #Variable, die erforderlich ist, um nicht mehrere Steine in einem Zug setzen zu können
         self.stonecolor = 1                         #legt fest, welche Farbe die gesetzten Steine haben
         self.x = -1                                 #x-Koordinate des zuletzt gesetzen Steins
         self.y = -1                                 #y-Koordinate des zuletzt gesetzten Steins
@@ -34,6 +35,13 @@ class mainGUI():
         self.textbox_x.place(x=50, y=500)
         self.textbox_y = Text(self.frame, background="white", width=10, height=1)
         self.textbox_y.place(x=50, y=530)
+        
+        self.label1 = Label(self.frame, width=15, height=1, text="geschlagene Steine:")
+        self.label1.place(x=175, y=480)
+        self.label2 = Label(self.frame, width=15, height=1, text="weiße: "+str(self.deleted_white_stones))
+        self.label2.place(x=175, y=510)
+        self.label3 = Label(self.frame, width=15, height=1, text="schwarze: "+str(self.deleted_black_stones))
+        self.label3.place(x=175, y=540)
         
         self.spielfeldstatus = [[None]*19 for i in range(19)]
         if not(i==18):
@@ -56,12 +64,12 @@ class mainGUI():
 
     def setBack(self, x, y):
         """
-        mit dieser Methode kann man Steine zuruecknehmen,
+        mit dieser Methode kann man Steine zurücknehmen,
         wenn man sie versehentlich gesetzt hat
         """
         if (0 <= x < 19) and (0 <= y < 19):
-            if (self.spielfeldstatus[x][y] != None)and(x == self.x)and(y==self.y):      #man kann nur den zuletzt gesetzten Stein zuruecknehmen
-                self.spielfeldstatus[x][y] = None                                       #loescht einen gesetzten Stein
+            if (self.spielfeldstatus[x][y] != None)and(x == self.x)and(y==self.y):      #man kann nur den zuletzt gesetzten Stein zurücknehmen
+                self.spielfeldstatus[x][y] = None                                       #löscht einen gesetzten Stein
                 self.steingesetzt = False
                 self.fertigButton = Button(self.frame, text="Fertig (aussetzen)", command=self.fertigButton_click)
                 self.fertigButton.place(x=350, y=500, height=50, width=100)
@@ -69,7 +77,7 @@ class mainGUI():
 
     def draw(self):
         """
-        Methode zum Zeichnen des Spielfelds mit Steinen
+        Methode zum Zeichnen des Spielfelds mit den Steinen
         """
         self.spielbrett = Canvas(self.frame, bg="white") #Definition des Spielbretts
         self.spielbrett.bind("<Button-1>", self.left_click)
@@ -122,7 +130,7 @@ class mainGUI():
             if self.stonecolor == 1:
                 farbe = "schwarz"
             else:
-                farbe = "weiss"
+                farbe = "weiß"
             self.zugliste += [farbe+" setzt aus\n"]
         self.f = open("spielverlauf.txt", "w")
         self.f.writelines(self.zugliste)
@@ -146,12 +154,16 @@ class mainGUI():
         """
         if (0 <= x < 19) and (0 <= y < 19):
             if (self.spielfeldstatus[x][y] != None)and(self.stonecolor != self.spielfeldstatus[x][y].color):        #man kann weder leere Felder noch eigene Steine schlagen
-                self.spielfeldstatus[x][y] = None                                                                   #loescht einen gesetzten Stein
+                self.spielfeldstatus[x][y] = None                                                                   #löscht einen gesetzten Stein
                 if self.stonecolor == 2:
-                    self.deleted_black_stones+=1            #wenn weiss am Zug ist, werden schwarze Steine geschlagen
+                    self.deleted_black_stones+=1            #wenn weiß am Zug ist, werden schwarze Steine geschlagen
                 elif self.stonecolor==1:
-                    self.deleted_white_stones+=1            #wenn schwarz am Zug ist, werden weisse Steine geschlagen
+                    self.deleted_white_stones+=1            #wenn schwarz am Zug ist, werden weiße Steine geschlagen
         self.draw()
+        self.label2 = Label(self.frame, width=15, height=1, text="weiße: "+str(self.deleted_white_stones))
+        self.label2.place(x=175, y=510)
+        self.label3 = Label(self.frame, width=15, height=1, text="schwarze: "+str(self.deleted_black_stones))
+        self.label3.place(x=175, y=540)
 
     def right_click(self, event):
         """
@@ -180,7 +192,7 @@ class mainGUI():
         if(self.stonecolor == 1):
             self.parent.title("Go - schwarz")
         elif(self.stonecolor == 2):
-            self.parent.title("Go - weiss")
+            self.parent.title("Go - weiß")
         self.fertigButton = Button(self.frame, text="Fertig (aussetzen)", command=self.fertigButton_click)
         self.fertigButton.place(x=350, y=500, height=50, width=100)
         self.textbox_x = Text(self.frame, background="white", width=10, height=1)
@@ -190,8 +202,8 @@ class mainGUI():
 
     def mouse_move(self, event):
         """
-        Methode, die aufgerufen werden soll, wenn mit
-        der Maus ueber das Spielbrett gefahren wird
+        Methode, die aufgerufen wird, wenn mit
+        der Maus über das Spielbrett gefahren wird
         """
         self.draw()
         x = (event.x-10)/20
@@ -205,7 +217,7 @@ class mainGUI():
     def press_enter(self, event):
         """
         Methode, die aufgerufen werden sollte,
-        wenn die Eingabetaste gedrueckt wird
+        wenn die Eingabetaste gedrückt wird
         """
         x = int(self.textbox_x.get(1.0, "end-1c"))
         y = int(self.textbox_y.get(1.0, "end-1c"))
@@ -214,10 +226,10 @@ class mainGUI():
 
 def main():
     """
-    Methode, die das Programm laufen laesst
+    Methode, die das Programm laufen lässt
     """
     root = Tk()             #Instanzierung eines leeren Tkinter-Fensters
-    app = mainGUI(root)     #Instanzierung eines Programms, das die Vorlage root mit allen Aenderungen in mainGUI modifiziert
+    app = mainGUI(root)     #Instanzierung eines Programms, das die Vorlage root mit allen Änderungen in mainGUI modifiziert
     app.parent.mainloop()   #das Starten des Programms geht vom parent des Programms (root) aus
 
 if __name__ == '__main__':
