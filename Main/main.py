@@ -20,7 +20,7 @@ class mainGUI():
         self.x = -1                                 #x-Koordinate des zuletzt gesetzen Steins
         self.y = -1                                 #y-Koordinate des zuletzt gesetzten Steins
         self.zugliste = [""]                        #Spielverlauf in Form eines Text-Strings aus aneinandergereihten Koordinaten
-        self.deleted_white_stones = 0               #Anzahl der geschlagenen  weissen Steine
+        self.deleted_white_stones = 0               #Anzahl der geschlagenen  weißen Steine
         self.deleted_black_stones = 0               #Anzahl der geschlagenen schwarzen Steine
         self.initializeComponents()
 
